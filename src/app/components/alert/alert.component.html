@@ -1,0 +1,8 @@
+<div class="container">
+  <div *ngIf="alert.status" class="alert alert-warning alert-dismissible fade show" role="alert">
+    <strong>Holy guacamole!</strong> {{ alert.message }}
+    <button type="button" class="close" (click)="closeAlert()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+</div>
