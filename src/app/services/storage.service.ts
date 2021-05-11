@@ -13,6 +13,11 @@ export class StorageService {
   }
 
   getToken() : string {
-    return localStorage.getItem('access_toke');
+    return localStorage.getItem('access_token');
+  }
+
+  clearToken() : void {
+    localStorage.removeItem('access_token');
+    localStorage.clear();
   }
 }

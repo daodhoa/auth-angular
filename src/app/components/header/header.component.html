@@ -29,7 +29,11 @@
             </ul>
             <ul class="navbar-nav mt-2 mt-lg-0">
                 <li class="nav-item">
-                  <a class="nav-link" routerLink="/sign-in" routerLinkActive="active">Login</a>
+                  <a *ngIf="!user" class="nav-link" routerLink="/sign-in" routerLinkActive="active">Login</a>
+                  <span *ngIf="user" class="nav-link">{{ user.name }}</span>
+                </li>
+                <li class="nav-item">
+                    <button *ngIf="user" class="nav-link" (click)="logout()"> Logout</button>
                 </li>
             </ul>
         </div>
