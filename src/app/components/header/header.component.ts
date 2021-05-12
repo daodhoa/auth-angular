@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { merge, Observable } from 'rxjs';
 import { User } from 'src/app/models/user';
@@ -11,21 +11,9 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class HeaderComponent implements OnInit {
 
-  user: User | null = null;
-
-  user$ : Observable<User | null> = merge(
-    this.authService.getMe(),
-    this.authService.getUser()
-  )
+  @Input() user: User | null = null;
 
   constructor(private authService: AuthService, private router: Router) {
-    this.user$.subscribe((data) => {
-      if (data) {
-        this.user = {...data};
-      } else {
-        this.user = null;
-      }
-    });
   }
 
   ngOnInit(): void {
@@ -33,7 +21,6 @@ export class HeaderComponent implements OnInit {
 
   logout() : void {
     this.authService.logout();
-    this.router.navigateByUrl('');
+    this.router.navigateByUrl('/sign-in');
   }
-
 }

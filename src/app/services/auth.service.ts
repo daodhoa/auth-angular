@@ -16,7 +16,9 @@ interface AuthResponse {
 })
 export class AuthService {
 
-  private user$ = new BehaviorSubject<User>(null);
+  private user$ = new BehaviorSubject<User | null>(null);
+
+  private isLoggedIn : boolean;
 
   constructor(private http: HttpClient, private storageService: StorageService) { }
 
@@ -26,6 +28,7 @@ export class AuthService {
         tap (
           ({ access_token, user }) => {
             this.setUser(user);
+            this.isLoggedIn = true;
             this.storageService.saveToken(access_token);
           }
         ),
@@ -33,33 +36,35 @@ export class AuthService {
       )
   }
 
+  getIsLoggedIn() : boolean {
+    return this.isLoggedIn;
+  }
+
   setUser(user: User | null) {
     this.user$.next(user);
   }
 
-  getUser() : Observable<User> {
+  getUser() : Observable<User | null> {
+    console.log("Call get user");
     return this.user$.asObservable();
   }
 
-  getMe() : Observable<User> {
+  getMe() : Observable<User | null> {
     const token: string | null = this.storageService.getToken();
 
     if (token === null) {
       return EMPTY;
     }
-
     return this.http.get<User>(GET_ME)
       .pipe(
-        tap( (user) => {
-          this.setUser(user) 
-        }),
-        pluck('user')
+        tap((user) => {
+          this.setUser(user);
+        })
       )
   }
 
   getAccessTokenHeader() {
     const token: string | null = this.storageService.getToken() || '';
-    console.log('token: --' + token);
     return { access_token : token }
   }
 
